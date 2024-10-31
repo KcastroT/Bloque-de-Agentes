@@ -10,6 +10,7 @@
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
 
+
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
 /[Mm]emoryCaptures/
@@ -73,3 +74,9 @@ crashlytics-build.properties
 
 # MacOS files
 .DS_Store
+
+# Windows Files
+Thumbs.db
+ehthumbs.db
+
+.vscode
