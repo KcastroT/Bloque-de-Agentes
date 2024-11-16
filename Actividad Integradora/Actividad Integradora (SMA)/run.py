@@ -1,4 +1,4 @@
-from ModeloTrafico import TrafficModel
+from traffic_model import TrafficModel
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from matplotlib.patches import Rectangle
