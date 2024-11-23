@@ -163,6 +163,10 @@ class TrafficModel(Model):
             occupied_parking_lots.add(start)
             destination = random.choice([pos for pos in self.parking_lot_positions if pos != start])
             
+            print("\n\n\n\n\n\n\nESDE AQUI VA EL START", start)
+            print("\n\n\n\n\n\n\nESDE AQUI VA EL DESTINATION", destination)
+
+
             # Create the car agent and place it on the grid
             car = CarAgent(f"car_{i}", self, start, destination)
             self.grid.place_agent(car, start)

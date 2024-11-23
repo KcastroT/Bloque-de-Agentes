@@ -60,7 +60,7 @@ def render_model():
 
 
     anim = FuncAnimation(
-        fig, update, frames=100, interval=500, repeat=False, blit=False
+        fig, update, frames=100, interval=200, repeat=False, blit=False
     )  
     plt.show()
 
