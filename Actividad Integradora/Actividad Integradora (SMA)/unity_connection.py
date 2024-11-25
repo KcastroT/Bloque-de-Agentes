@@ -1,54 +1,26 @@
-from flask import Flask, request, jsonify
-from threading import Thread
-import time
-
-from traffic_model import TrafficModel
+from flask import Flask, jsonify
+from traffic_model import TrafficModel  # Import your model here
 
 app = Flask(__name__)
-model = TrafficModel(width=24, height=24)
 
-running = True
+@app.route('/run_simulation', methods=['GET'])
+def run_simulation():
+    # Initialize the model
+    model = TrafficModel(width=24, height=24, steps=100)
 
-def run_model():
-    """
-    Función que ejecuta el modelo de Mesa en un hilo separado.
-    """
-    while running:
-        time.sleep(1)
-        model.step()
+    # Run the model to completion
+    model.run_model()
 
-model_thread = Thread(target=run_model)
-model_thread.start()
+    # Retrieve car movements
+    movements = model.get_car_positions()
 
-@app.route('/get_agent_coordinates', methods=['GET'])
-def get_agent_coordinates():
-    agent_positions = model.get_agent_positions()
-    return jsonify(agent_positions)
+    # Prepare JSON response
+    response = {
+        "steps": model.steps,
+        "car_movements": movements
+    }
 
-@app.route('/send_coordinates', methods=['POST'])
-def send_coordinates():
-    data = request.json
-    print(f"Coordenadas recibidas de Unity: {data}")
-    return jsonify({'message': 'Coordenadas recibidas exitosamente'})
-
-@app.route('/shutdown', methods=['POST'])
-def shutdown():
-    """
-    Ruta para detener el servidor y el modelo de Mesa de manera segura.
-    """
-    global running
-    running = False
-    func = request.environ.get('werkzeug.server.shutdown')
-    if func is not None:
-        func()
-    return 'Servidor detenido.'
+    return jsonify(response)
 
 if __name__ == '__main__':
-    try:
-        app.run(host='0.0.0.0', port=5000)
-    except KeyboardInterrupt:
-        pass
-    finally:
-        running = False
-        model_thread.join()
-
+    app.run(debug=True)

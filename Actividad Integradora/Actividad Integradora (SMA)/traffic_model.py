@@ -10,10 +10,15 @@ from horizontalRidge_agent import HorizontalRidgeAgent
 import random
 
 class TrafficModel(Model):
-    def __init__(self, width, height):
+    def __init__(self, width, height,steps = 100):
         super().__init__()
         self.grid = MultiGrid(width, height, torus=False)
         self.schedule = SimultaneousActivation(self)
+        self.steps = steps
+        self.current_step = 0
+        self.car_movements = {}
+
+
 
         # Adding buildings
         building_positions = [(2,2), (2,3) 
@@ -153,26 +158,27 @@ class TrafficModel(Model):
 
         occupied_parking_lots = set()  # Track which parking lots are occupied
 
-        for i in range(5):  # Spawn 5 cars
 
+        for i in range(5):  # Spawn 5 cars
             available_parking_lots = [pos for pos in self.parking_lot_positions if pos not in occupied_parking_lots]
-        
             if not available_parking_lots:
                 break
             start = random.choice(available_parking_lots)
             occupied_parking_lots.add(start)
             destination = random.choice([pos for pos in self.parking_lot_positions if pos != start])
-            
-            print("\n\n\n\n\n\n\nESDE AQUI VA EL START", start)
-            print("\n\n\n\n\n\n\nESDE AQUI VA EL DESTINATION", destination)
-
 
             # Create the car agent and place it on the grid
             car = CarAgent(f"car_{i}", self, start, destination)
             self.grid.place_agent(car, start)
             self.schedule.add(car)
 
-            self.add_ridges()
+            # Initialize movement tracking for this car
+            self.car_movements[car.unique_id] = [start]
+            
+            print("\n\n\n\n\n\n\nDESDE AQUI VA EL START", start)
+            print("\n\n\n\n\n\n\nDESDE AQUI VA EL DESTINATION", destination)
+
+
     
     def add_ridges(self):
         
@@ -231,6 +237,29 @@ class TrafficModel(Model):
             cellmates = self.grid.get_cell_list_contents([(x, y)])
             if not cellmates:
                 return (x, y)
+            
+   
+            
+    def get_car_positions(self):
+       return self.car_movements
 
     def step(self):
+        """
+        Run one step of the simulation. This includes moving all agents
+        and tracking car movements.
+        """
+        # Track car positions during the step
+        for agent in self.schedule.agents:
+            if isinstance(agent, CarAgent):
+                self.car_movements[agent.unique_id].append(agent.pos)
+
+        # Advance the simulation
         self.schedule.step()
+        self.current_step += 1
+
+    def run_model(self):
+        """
+        Run the model for the predefined number of steps.
+        """
+        while self.current_step < self.steps:
+            self.step()

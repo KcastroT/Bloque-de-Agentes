@@ -669,7 +669,7 @@ class CarAgent(Agent):
             if isinstance(agent, TrafficLightAgent) and agent.color == "red":
                 return False
         return True
-
+    
     def find_path(self, start, destination):
         """
         Encuentra el camino más corto en el grafo usando BFS.
