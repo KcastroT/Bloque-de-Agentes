@@ -156,15 +156,14 @@ class TrafficModel(Model):
             self.grid.place_agent(parking_lot, pos)
             self.schedule.add(parking_lot)
 
-        occupied_parking_lots = set()  # Track which parking lots are occupied
+        
 
 
-        for i in range(5):  # Spawn 5 cars
-            available_parking_lots = [pos for pos in self.parking_lot_positions if pos not in occupied_parking_lots]
+        for i in range(25):  # Spawn 25 cars
+            available_parking_lots = [pos for pos in self.parking_lot_positions]
             if not available_parking_lots:
                 break
             start = random.choice(available_parking_lots)
-            occupied_parking_lots.add(start)
             destination = random.choice([pos for pos in self.parking_lot_positions if pos != start])
 
             # Create the car agent and place it on the grid
