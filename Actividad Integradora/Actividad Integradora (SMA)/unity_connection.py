@@ -1,5 +1,5 @@
 from flask import Flask, jsonify
-from traffic_model import TrafficModel  # Import your model here
+from traffic_model import TrafficModel
 
 app = Flask(__name__)
 
@@ -7,20 +7,20 @@ app = Flask(__name__)
 def run_simulation():
     # Initialize the model
     model = TrafficModel(width=24, height=24, steps=100)
-
-    # Run the model to completion
     model.run_model()
-
-    # Retrieve car movements
     movements = model.get_car_positions()
 
-    # Prepare JSON response
-    response = {
-        "steps": model.steps,
-        "car_movements": movements
-    }
+    formatted_movements = []
+    for car_id, positions in movements.items():
+        formatted_positions = [{"x": pos[0], "y": pos[1]} for pos in positions]
+        formatted_movements.append({
+            "carId": car_id,
+            "positions": formatted_positions
+        })
+
+    response = formatted_movements
 
     return jsonify(response)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='127.0.0.1', port=5000)
