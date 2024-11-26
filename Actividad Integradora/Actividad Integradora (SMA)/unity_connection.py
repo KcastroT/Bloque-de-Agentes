@@ -3,7 +3,7 @@ from traffic_model import TrafficModel
 
 app = Flask(__name__)
 
-@app.route('/run_simulation', methods=['GET'])
+@app.route('/cars', methods=['GET'])
 def run_simulation():
     # Initialize the model
     model = TrafficModel(width=24, height=24, steps=100)
