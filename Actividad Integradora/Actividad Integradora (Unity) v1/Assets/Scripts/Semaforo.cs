@@ -2,32 +2,30 @@ using UnityEngine;
 
 public class Semaforo : MonoBehaviour
 {
-    // Referencias a los materiales de las luces
     public Material luzRoja;
     public Material luzAmarilla;
     public Material luzVerde;
 
-    // Tiempo que cada luz estará encendida
-    public float tiempoRojo = 5f;
+    public float tiempoRojo = 3f;
     public float tiempoAmarillo = 2f;
-    public float tiempoVerde = 5f;
+    public float tiempoVerde = 3f;
 
     private float temporizador;
     private enum EstadoSemaforo { Rojo, Amarillo, Verde }
     private EstadoSemaforo estadoActual;
 
-    // Start se ejecuta al inicio
     void Start()
     {
-        estadoActual = EstadoSemaforo.Rojo; // Comienza en rojo
+        estadoActual = EstadoSemaforo.Rojo;
         temporizador = tiempoRojo;
         ActualizarLuces();
+        Debug.Log("El semáforo inició en rojo.");
     }
 
-    // Update se llama una vez por frame
     void Update()
     {
         temporizador -= Time.deltaTime;
+        Debug.Log($"Temporizador: {temporizador}, Estado: {estadoActual}");
 
         if (temporizador <= 0)
         {
@@ -53,27 +51,29 @@ public class Semaforo : MonoBehaviour
                 break;
         }
 
+        Debug.Log($"Cambio a estado: {estadoActual}");
         ActualizarLuces();
     }
 
     void ActualizarLuces()
     {
-        // Apaga todas las luces al inicio
         luzRoja.DisableKeyword("_EMISSION");
         luzAmarilla.DisableKeyword("_EMISSION");
         luzVerde.DisableKeyword("_EMISSION");
 
-        // Enciende la luz correspondiente al estado actual
         switch (estadoActual)
         {
             case EstadoSemaforo.Rojo:
                 luzRoja.EnableKeyword("_EMISSION");
+                Debug.Log("Luz roja encendida");
                 break;
             case EstadoSemaforo.Amarillo:
                 luzAmarilla.EnableKeyword("_EMISSION");
+                Debug.Log("Luz amarilla encendida");
                 break;
             case EstadoSemaforo.Verde:
                 luzVerde.EnableKeyword("_EMISSION");
+                Debug.Log("Luz verde encendida");
                 break;
         }
     }
