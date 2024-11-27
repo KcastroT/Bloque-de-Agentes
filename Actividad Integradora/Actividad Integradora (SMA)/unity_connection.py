@@ -1,26 +1,50 @@
 from flask import Flask, jsonify
 from traffic_model import TrafficModel
+import re
 
 app = Flask(__name__)
 
-@app.route('/cars', methods=['GET'])
-def run_simulation():
-    # Initialize the model
-    model = TrafficModel(width=24, height=24, steps=100)
-    model.run_model()
-    movements = model.get_car_positions()
+# Create and run the model globally
+model = TrafficModel(width=24, height=24, steps=100)
+model.run_model()
 
+# Precompute the data
+car_movements = model.get_car_positions()
+traffic_light_states = model.get_traffic_light_colors()  # Assuming you have a method for traffic lights
+
+
+@app.route('/cars', methods=['GET'])
+def get_car_movements():
     formatted_movements = []
-    for car_id, positions in movements.items():
+    for car_id, positions in car_movements.items():
         formatted_positions = [{"x": pos[0], "y": pos[1]} for pos in positions]
         formatted_movements.append({
             "carId": car_id,
             "positions": formatted_positions
         })
 
-    response = formatted_movements
+    return jsonify(formatted_movements)
 
-    return jsonify(response)
+@app.route('/lights', methods=['GET'])
+def get_traffic_light_states():
+    formatted_states = []
+
+    # Iterate through traffic_light_states where each key is a light ID
+    for light_id, color_history in traffic_light_states.items():
+        # Use regex to extract coordinates (x, y)
+        match = re.search(r"\((\d+),\s*(\d+)\)", light_id)
+        if match:
+            x = int(match.group(1))  # Extracted x coordinate
+            y = int(match.group(2))  # Extracted y coordinate
+        
+            # Append the light data with coordinate as trafficLightId
+            formatted_states.append({
+                "positions": [{"step": step, "color": color} for step, color in enumerate(color_history)],
+                "trafficLightId": [x, y]
+            })
+
+    return jsonify(formatted_states)
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='127.0.0.1', port=5000)

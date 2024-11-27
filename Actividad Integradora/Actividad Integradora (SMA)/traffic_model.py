@@ -18,6 +18,7 @@ class TrafficModel(Model):
         self.steps = steps
         self.current_step = 0
         self.car_movements = {}
+        self.traffic_lights = {}
 
          # Definir posiciones caminables para peatones (sin incluir semáforos)
         self.pedestrian_walkable_positions = set()
@@ -235,10 +236,14 @@ class TrafficModel(Model):
             (20,18) : "red",
             (20,19) : "red",
         }
+
         for pos, color in traffic_light_positions.items():
             traffic_light = TrafficLightAgent(f"traffic_light_{pos}", self, color)
             self.grid.place_agent(traffic_light, pos)
             self.schedule.add(traffic_light)
+            
+            # Initialize the dictionary entry for each traffic light with an empty list
+            self.traffic_lights[traffic_light.unique_id] = []
 
         # Adding parking lots
         
@@ -251,7 +256,7 @@ class TrafficModel(Model):
         occupied_parking_lots = set()  # Track which parking lots are occupied
 
         # Spawn 5 cars
-        for i in range(5):
+        for i in range(25):
             available_parking_lots = [pos for pos in self.parking_lot_positions if pos not in occupied_parking_lots]
             
             if len(available_parking_lots) < 2:
@@ -350,12 +355,19 @@ class TrafficModel(Model):
             
     def get_car_positions(self):
        return self.car_movements
+    
+    def get_traffic_light_colors(self):
+        return self.traffic_lights
 
     def step(self):
         """
         Run one step of the simulation. This includes moving all agents
         and tracking car movements.
         """
+        for agent in self.schedule.agents:
+            if isinstance(agent, TrafficLightAgent):
+                self.traffic_lights[agent.unique_id].append(agent.color)
+
         # Track car positions during the step
         for agent in self.schedule.agents:
             if isinstance(agent, CarAgent):

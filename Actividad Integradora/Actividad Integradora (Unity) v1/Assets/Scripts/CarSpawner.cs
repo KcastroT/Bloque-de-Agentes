@@ -91,7 +91,7 @@ public class CarSpawner : MonoBehaviour
             Quaternion targetRotation = Quaternion.Euler(0, angle, 0);
 
             float elapsedTime = 0f;
-            float duration = 0.5f; // Adjust duration for smoothness
+            float duration = 0.25f; // Adjust duration for smoothness
 
             while (elapsedTime < duration)
             {
