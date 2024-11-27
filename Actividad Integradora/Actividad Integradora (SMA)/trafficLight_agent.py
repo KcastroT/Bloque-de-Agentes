@@ -8,6 +8,10 @@ class TrafficLightAgent(Agent):
         self.green_duration = 8
         self.red_duration = 10
 
+    def can_pedestrian_cross(self):
+        # Suponiendo que cuando el semáforo está en rojo para coches, está en verde para peatones
+        return self.color == "red"
+
     def step(self):
         self.timer += 1
         if self.color == "green" and self.timer >= self.green_duration:

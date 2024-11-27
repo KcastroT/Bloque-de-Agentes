@@ -7,8 +7,8 @@ from trafficLight_agent import TrafficLightAgent
 from parkingLot_Agent import ParkingLotAgent
 from verticalRidge_agent import VerticalRidgeAgent
 from horizontalRidge_agent import HorizontalRidgeAgent
-from peaton_agent import PedestrianAgent
 from traffic_model import TrafficModel
+from peaton_agent import PedestrianAgent
 
 def render(ax):
     """Render the model on the given Matplotlib Axes."""

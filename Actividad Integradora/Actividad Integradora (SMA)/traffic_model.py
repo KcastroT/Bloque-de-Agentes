@@ -22,7 +22,83 @@ class TrafficModel(Model):
 
          # Definir posiciones caminables para peatones (sin incluir semáforos)
         self.pedestrian_walkable_positions = set()
-        
+        self.component_positions = {
+            #componente 1
+            (2, 2): [(3, 2), (2, 3)],
+            (3, 2): [(4, 2),(2,2)],
+            (4, 2): [(5, 2),(3,2)],
+            (5, 2): [(5, 3),(4,2)],
+            (5, 3): [(5, 4),(5,2)],
+            (5,4): [(5,3)],
+            #esquina muerta
+            (2, 3): [(2, 4),(2,2)],
+            (3,4): [(2,4)],
+            (2, 4): [(3, 4), (2,3)],
+            
+            #COMPONENTE 2
+            (2,7):[(3,7)],
+            (3,7):[(2,7),(4,7)],
+            (4,7):[(5,7),(3,7)],
+            (5,7):[(5,8),(4,7)],
+            (5,8):[(5,9),(5,7)],
+            (5,9):[(5,10),(5,8)],
+            (5,10):[(5,11),(5,9)],
+            #ESQUINA MUERTA
+            (2,9):[(2,10)],
+            (2,10):[(2,9),(2,11)],
+            (2,11):[(2,10),(3,11)],
+            (3,11):[(2,11)],
+            
+            
+            #COMPONENTE 3
+            (4,17):[(5,17)],
+            (5,17):[(6,17),(4,17)],
+            (6,17):[(7,17),(5,17)],
+            (7,17):[(8,17),(6,17)],
+            (8,17):[(9,17),(7,17)],
+            (9,17):[(10,17),(8,17)],
+            (10,17):[(11,17),(9,17)],
+            (11,17):[(11,16),(10,17),(11,18)],
+            (11,16):[(11,17)],
+            
+            (5,20):[(6,20)],
+            (6,20):[(7,20),(5,20)],
+            (7,20):[(8,20),(6,20)],
+            (8,20):[(9,20),(7,20)],
+            (9,20):[(10,20),(8,20)],
+            (10,20):[(11,20),(9,20)],
+            (11,20):[(10,20)],
+            
+             #LADO DERECHO
+            # Componente 1
+            (16, 2): [(16, 3)],
+            (16, 3): [(16, 4), (16, 2)],
+            (16, 4): [(16, 5), (16, 3)],
+
+            # Componente 2
+
+            (21, 2): [(21, 3)],
+            (21, 3): [(21, 4), (21, 2)],
+            (21, 4): [(21, 5), (21, 3)],
+            (21, 5): [ (21, 4)], 
+            (21, 8): [(21, 9)],
+            (21, 9): [(21, 10), (21, 8)],
+            (21, 10): [(21, 11), (21, 9)],
+            (21, 11):[(21,10)],
+            
+            # Componente 2
+            (16, 16): [(17, 16), (16,17)],
+            (17, 16): [(16, 16)],
+            (16, 17): [(16,16)],
+            
+            (20, 16): [(21, 16)],
+            (21, 16): [(20, 16), (21, 17)],
+            (21, 17): [(21, 16), (20, 17)],
+            (20, 17): [(21, 17)],
+            (20, 20): [(20, 21)],
+            (20, 21): [(20, 20), (21, 21)],
+            (21, 21):[(20,21)]   
+        }
         self.banquetota = {
             # Banquetas
             
@@ -111,6 +187,8 @@ class TrafficModel(Model):
             (20, 21): [(20, 20), (21, 21)],
             (21, 21):[(20,21)]
         }
+
+        self.intersections_graph = self.component_positions
 
         # Adding buildings
         building_positions = [(2,2), (2,3) 
@@ -280,17 +358,22 @@ class TrafficModel(Model):
             print(f"Car {i} created at {start} with destination {destination}")
         # Adding pedestrians
         pedestrian_graph_positions = list(self.banquetota.keys())  # Usar las posiciones del grafo (banquetota) del modelo
+        traffic_light_positions = [pos for pos, _ in traffic_light_positions.items()]  # Obtener las posiciones de semáforos
 
-        for i in range(15):  # Spawn 3 pedestrians at random nodes of the pedestrian graph
-            start = random.choice(pedestrian_graph_positions)
+        for i in range(15):  # Spawn 15 pedestrians at random nodes of the pedestrian graph
+            # Filtrar posiciones para evitar semáforos
+            available_positions = [pos for pos in pedestrian_graph_positions if pos not in traffic_light_positions]
+            if not available_positions:
+                print("No hay posiciones disponibles para peatones")
+                break
+            start = random.choice(available_positions)
             pedestrian = PedestrianAgent(f"pedestrian_{i}", self, start_pos=start)
             self.grid.place_agent(pedestrian, start)
             self.schedule.add(pedestrian)
 
+            print(f"Pedestrian {i} created at {start}")
             print("\n\n\n\n\n\n\nDESDE AQUI VA EL START", start)
             print("\n\n\n\n\n\n\nDESDE AQUI VA EL DESTINATION", destination)
-
-
     
     def add_ridges(self):
         
