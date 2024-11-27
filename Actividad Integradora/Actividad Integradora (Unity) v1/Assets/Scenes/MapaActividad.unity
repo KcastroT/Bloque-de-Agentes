@@ -4718,6 +4718,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: small_house_2 (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 5564544188985965261, guid: a36c16a0315feb440a09acc1948222f8, type: 3}
+      propertyPath: m_Color.b
+      value: 0.4406689
+      objectReference: {fileID: 0}
+    - target: {fileID: 5564544188985965261, guid: a36c16a0315feb440a09acc1948222f8, type: 3}
+      propertyPath: m_Color.g
+      value: 0.12904951
+      objectReference: {fileID: 0}
+    - target: {fileID: 5564544188985965261, guid: a36c16a0315feb440a09acc1948222f8, type: 3}
+      propertyPath: m_Color.r
+      value: 0.9433962
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5684,6 +5696,18 @@ PrefabInstance:
     - target: {fileID: 3034689328620587580, guid: a36c16a0315feb440a09acc1948222f8, type: 3}
       propertyPath: m_Name
       value: small_house_2 (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5564544188985965261, guid: a36c16a0315feb440a09acc1948222f8, type: 3}
+      propertyPath: m_Color.b
+      value: 0.44313726
+      objectReference: {fileID: 0}
+    - target: {fileID: 5564544188985965261, guid: a36c16a0315feb440a09acc1948222f8, type: 3}
+      propertyPath: m_Color.g
+      value: 0.12941177
+      objectReference: {fileID: 0}
+    - target: {fileID: 5564544188985965261, guid: a36c16a0315feb440a09acc1948222f8, type: 3}
+      propertyPath: m_Color.r
+      value: 0.94509804
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8693,6 +8717,18 @@ PrefabInstance:
     - target: {fileID: 3034689328620587580, guid: a36c16a0315feb440a09acc1948222f8, type: 3}
       propertyPath: m_Name
       value: small_house_2 (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5564544188985965261, guid: a36c16a0315feb440a09acc1948222f8, type: 3}
+      propertyPath: m_Color.b
+      value: 0.44313726
+      objectReference: {fileID: 0}
+    - target: {fileID: 5564544188985965261, guid: a36c16a0315feb440a09acc1948222f8, type: 3}
+      propertyPath: m_Color.g
+      value: 0.12941177
+      objectReference: {fileID: 0}
+    - target: {fileID: 5564544188985965261, guid: a36c16a0315feb440a09acc1948222f8, type: 3}
+      propertyPath: m_Color.r
+      value: 0.94509804
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -18040,6 +18076,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: small_house_2 (10)
       objectReference: {fileID: 0}
+    - target: {fileID: 5564544188985965261, guid: a36c16a0315feb440a09acc1948222f8, type: 3}
+      propertyPath: m_Color.b
+      value: 0.44313726
+      objectReference: {fileID: 0}
+    - target: {fileID: 5564544188985965261, guid: a36c16a0315feb440a09acc1948222f8, type: 3}
+      propertyPath: m_Color.g
+      value: 0.12941177
+      objectReference: {fileID: 0}
+    - target: {fileID: 5564544188985965261, guid: a36c16a0315feb440a09acc1948222f8, type: 3}
+      propertyPath: m_Color.r
+      value: 0.94509804
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -21312,6 +21360,18 @@ PrefabInstance:
     - target: {fileID: 3034689328620587580, guid: a36c16a0315feb440a09acc1948222f8, type: 3}
       propertyPath: m_Name
       value: small_house_2 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5564544188985965261, guid: a36c16a0315feb440a09acc1948222f8, type: 3}
+      propertyPath: m_Color.b
+      value: 0.44313726
+      objectReference: {fileID: 0}
+    - target: {fileID: 5564544188985965261, guid: a36c16a0315feb440a09acc1948222f8, type: 3}
+      propertyPath: m_Color.g
+      value: 0.12941177
+      objectReference: {fileID: 0}
+    - target: {fileID: 5564544188985965261, guid: a36c16a0315feb440a09acc1948222f8, type: 3}
+      propertyPath: m_Color.r
+      value: 0.94509804
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -30389,7 +30449,7 @@ Light:
   m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 1.2
+  m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
@@ -30410,7 +30470,7 @@ Transform:
   m_GameObject: {fileID: 816044576}
   serializedVersion: 2
   m_LocalRotation: {x: -0.29385802, y: 0.5609393, z: 0.16033316, w: -0.75715774}
-  m_LocalPosition: {x: 9, y: 3.35, z: -5.66}
+  m_LocalPosition: {x: 7.577, y: 4.743, z: -4.468}
   m_LocalScale: {x: 0.987283, y: 0.9712033, z: 0.89729244}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -46050,6 +46110,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: small_house_2 (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 5564544188985965261, guid: a36c16a0315feb440a09acc1948222f8, type: 3}
+      propertyPath: m_Color.b
+      value: 0.44313726
+      objectReference: {fileID: 0}
+    - target: {fileID: 5564544188985965261, guid: a36c16a0315feb440a09acc1948222f8, type: 3}
+      propertyPath: m_Color.g
+      value: 0.12941177
+      objectReference: {fileID: 0}
+    - target: {fileID: 5564544188985965261, guid: a36c16a0315feb440a09acc1948222f8, type: 3}
+      propertyPath: m_Color.r
+      value: 0.94509804
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -53485,6 +53557,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: small_house_2 (8)
       objectReference: {fileID: 0}
+    - target: {fileID: 5564544188985965261, guid: a36c16a0315feb440a09acc1948222f8, type: 3}
+      propertyPath: m_Color.b
+      value: 0.44313726
+      objectReference: {fileID: 0}
+    - target: {fileID: 5564544188985965261, guid: a36c16a0315feb440a09acc1948222f8, type: 3}
+      propertyPath: m_Color.g
+      value: 0.12941177
+      objectReference: {fileID: 0}
+    - target: {fileID: 5564544188985965261, guid: a36c16a0315feb440a09acc1948222f8, type: 3}
+      propertyPath: m_Color.r
+      value: 0.94509804
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -57850,6 +57934,18 @@ PrefabInstance:
     - target: {fileID: 6536885548316618111, guid: 972492e6e936f8a4b8fd9e008339db74, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7665528486934890222, guid: 972492e6e936f8a4b8fd9e008339db74, type: 3}
+      propertyPath: m_Color.b
+      value: 0.44313726
+      objectReference: {fileID: 0}
+    - target: {fileID: 7665528486934890222, guid: 972492e6e936f8a4b8fd9e008339db74, type: 3}
+      propertyPath: m_Color.g
+      value: 0.12941177
+      objectReference: {fileID: 0}
+    - target: {fileID: 7665528486934890222, guid: 972492e6e936f8a4b8fd9e008339db74, type: 3}
+      propertyPath: m_Color.r
+      value: 0.94509804
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -76520,6 +76616,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: small_house_2 (9)
       objectReference: {fileID: 0}
+    - target: {fileID: 5564544188985965261, guid: a36c16a0315feb440a09acc1948222f8, type: 3}
+      propertyPath: m_Color.b
+      value: 0.44313726
+      objectReference: {fileID: 0}
+    - target: {fileID: 5564544188985965261, guid: a36c16a0315feb440a09acc1948222f8, type: 3}
+      propertyPath: m_Color.g
+      value: 0.12941177
+      objectReference: {fileID: 0}
+    - target: {fileID: 5564544188985965261, guid: a36c16a0315feb440a09acc1948222f8, type: 3}
+      propertyPath: m_Color.r
+      value: 0.94509804
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -78412,6 +78520,18 @@ PrefabInstance:
     - target: {fileID: 3034689328620587580, guid: a36c16a0315feb440a09acc1948222f8, type: 3}
       propertyPath: m_Name
       value: small_house_2 (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5564544188985965261, guid: a36c16a0315feb440a09acc1948222f8, type: 3}
+      propertyPath: m_Color.b
+      value: 0.44313726
+      objectReference: {fileID: 0}
+    - target: {fileID: 5564544188985965261, guid: a36c16a0315feb440a09acc1948222f8, type: 3}
+      propertyPath: m_Color.g
+      value: 0.12941177
+      objectReference: {fileID: 0}
+    - target: {fileID: 5564544188985965261, guid: a36c16a0315feb440a09acc1948222f8, type: 3}
+      propertyPath: m_Color.r
+      value: 0.94509804
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
