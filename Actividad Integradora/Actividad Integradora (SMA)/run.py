@@ -33,7 +33,7 @@ def render(ax):
         elif isinstance(agent, ParkingLotAgent):
             ax.add_patch(Rectangle((x, y), 1, 1, color="yellow"))
         elif isinstance(agent, PedestrianAgent):
-            ax.add_patch(Rectangle((x, y), 1, 1, color="orange"))
+            ax.add_patch(Rectangle((x+0.25, y+0.25), 0.5, 0.5, color="orange"))
         elif isinstance(agent, CarAgent):
             ax.add_patch(Rectangle((x, y), 1, 1, color="black"))
         elif isinstance(agent, VerticalRidgeAgent):

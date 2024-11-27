@@ -64,12 +64,18 @@ class TrafficModel(Model):
             (8,17):[(9,17),(7,17)],
             (9,17):[(10,17),(8,17)],
             (10,17):[(11,17),(9,17)],
-            (11,17):[(11,16),(10,17)],
+            (11,17):[(11,16),(10,17),(11,18)],
             (11,16):[(11,17)],
             
-            
-            
-            
+            (5,20):[(6,20)],
+            (6,20):[(7,20),(5,20)],
+            (7,20):[(8,20),(6,20)],
+            (8,20):[(9,20),(7,20)],
+            (9,20):[(10,20),(8,20)],
+            (10,20):[(11,20),(9,20)],
+            (11,20):[(10,20),(11,19)],
+            (11,19):[(11,20),(11,18)],
+            (11,18):[(11,19),(11,17)],            
             #LADO DERECHO
             # Componente 1
             (16, 2): [(16, 3)],
@@ -87,8 +93,22 @@ class TrafficModel(Model):
             (21, 8): [(21, 9), (21, 7)],
             (21, 9): [(21, 10), (21, 8)],
             (21, 10): [(21, 11), (21, 9)],
-            (21, 11):[(21,10)]
+            (21, 11):[(21,10)],
             
+            # Componente 2
+            (16, 16): [(17, 16), (16,17)],
+            (17, 16): [(16, 16)],
+            (16, 17): [(16,16)],
+            
+            (20, 16): [(21, 16)],
+            (21, 16): [(20, 16), (21, 17)],
+            (21, 17): [(21, 16), (20, 17)],
+            (20, 17): [(21, 17), (20, 18)],
+            (20, 18): [(20, 17), (20, 19)], # Semáforo
+            (20, 19): [(20, 18), (20, 20)], #Semaforo
+            (20, 20): [(20, 19), (20, 21)],
+            (20, 21): [(20, 20), (21, 21)],
+            (21, 21):[(20,21)]
         }
 
         # Adding buildings
@@ -256,7 +276,7 @@ class TrafficModel(Model):
         # Adding pedestrians
         pedestrian_graph_positions = list(self.banquetota.keys())  # Usar las posiciones del grafo (banquetota) del modelo
 
-        for i in range(9):  # Spawn 3 pedestrians at random nodes of the pedestrian graph
+        for i in range(15):  # Spawn 3 pedestrians at random nodes of the pedestrian graph
             start = random.choice(pedestrian_graph_positions)
             pedestrian = PedestrianAgent(f"pedestrian_{i}", self, start_pos=start)
             self.grid.place_agent(pedestrian, start)
