@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from matplotlib.patches import Rectangle
 from car_agent import CarAgent
+from taxi_agent import TaxiAgent
+from passenger_agent import PassengerAgent
 from building_agent import BuildingAgent
 from trafficLight_agent import TrafficLightAgent
 from parkingLot_Agent import ParkingLotAgent
@@ -36,6 +38,10 @@ def render(ax):
             ax.add_patch(Rectangle((x+0.25, y+0.25), 0.5, 0.5, color="orange"))
         elif isinstance(agent, CarAgent):
             ax.add_patch(Rectangle((x, y), 1, 1, color="black"))
+        elif isinstance(agent, TaxiAgent):
+            ax.add_patch(Rectangle((x, y), 1, 1, color="gray"))
+        elif isinstance(agent, PassengerAgent):
+            ax.add_patch(Rectangle((x+0.25, y+0.25), 0.5, 0.5, color="pink"))
         elif isinstance(agent, VerticalRidgeAgent):
             ax.add_patch(Rectangle((x, y), 0.3, 1, color="brown"))
         elif isinstance(agent, HorizontalRidgeAgent):

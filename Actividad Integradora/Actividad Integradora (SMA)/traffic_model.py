@@ -2,6 +2,8 @@ from mesa import Model
 from mesa.space import MultiGrid
 from mesa.time import SimultaneousActivation
 from building_agent import BuildingAgent
+from taxi_agent import TaxiAgent
+from passenger_agent import PassengerAgent
 from trafficLight_agent import TrafficLightAgent
 from parkingLot_Agent import ParkingLotAgent
 from car_agent import CarAgent
@@ -356,6 +358,29 @@ class TrafficModel(Model):
 
             # Verificación de asignación correcta de autos
             print(f"Car {i} created at {start} with destination {destination}")
+        
+        # Spawn 5 taxis
+        for i in range(5):
+            taxi = TaxiAgent(f"taxi_{i}", self)
+            self.grid.place_agent(taxi, taxi.start)  # Place the taxi at its start position
+            self.schedule.add(taxi)
+            print(f"Taxi {i} created at {taxi.start} with destination {taxi.destination}")
+
+
+        passenger_positions = [
+            (7, 16),
+            (16, 16),
+            (5, 10),
+            (16, 10),
+            (8, 11)
+        ]
+
+        for i, pos in enumerate(passenger_positions):
+            passenger = PassengerAgent(f"passenger_{i}", self, start_pos=pos)
+            self.grid.place_agent(passenger, pos)
+            self.schedule.add(passenger)
+            print(f"Passenger {i} created at {pos}")
+
         # Adding pedestrians
         pedestrian_graph_positions = list(self.banquetota.keys())  # Usar las posiciones del grafo (banquetota) del modelo
         traffic_light_positions = [pos for pos, _ in traffic_light_positions.items()]  # Obtener las posiciones de semáforos
