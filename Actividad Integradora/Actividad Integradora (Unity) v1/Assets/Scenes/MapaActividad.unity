@@ -31882,7 +31882,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76b291671c85e423a80ed4fd4e902650, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  carPrefab: {fileID: 3783821437864900153, guid: 330f5f17fabe14962ac50b07063c7cb3, type: 3}
+  carPrefabs:
+  - {fileID: 6159505693282641731, guid: b6c4ce49d42584b548d117dadf80946c, type: 3}
+  - {fileID: 1167529691253340867, guid: 15960e30448a840cd8971f21d0aea294, type: 3}
+  - {fileID: 9051843717575432051, guid: 6b1ab4c0c1bc54fd990f623eb8622983, type: 3}
+  - {fileID: 7903306233679310238, guid: aa4a7472e23e64b6c944153aa8f88109, type: 3}
+  - {fileID: 7590110511338956838, guid: 8348d93a522a5495993808b524b0845d, type: 3}
   dataUrl: http://127.0.0.1:5000/cars
 --- !u!1 &882450702
 GameObject:
