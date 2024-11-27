@@ -8,6 +8,7 @@ from car_agent import CarAgent
 from verticalRidge_agent import VerticalRidgeAgent
 from horizontalRidge_agent import HorizontalRidgeAgent
 import random
+from peaton_agent import PedestrianAgent
 
 class TrafficModel(Model):
     def __init__(self, width, height,steps = 100):
@@ -18,7 +19,77 @@ class TrafficModel(Model):
         self.current_step = 0
         self.car_movements = {}
 
+         # Definir posiciones caminables para peatones (sin incluir semáforos)
+        self.pedestrian_walkable_positions = set()
+        
+        self.banquetota = {
+            # Banquetas
+            
+            #componente 1
+            (2, 2): [(3, 2), (2, 3)],
+            (3, 2): [(4, 2),(2,2)],
+            (4, 2): [(5, 2),(3,2)],
+            (5, 2): [(5, 3),(4,2)],
+            (5, 3): [(5, 4),(5,2)],
+            (5,4): [(5,3)],
+            #esquina muerta
+            (2, 3): [(2, 4),(2,2)],
+            (3,4): [(2,4)],
+            (2, 4): [(2, 5), (3, 4), (2,3)],
+            
+            #SEMAFORO
+            (2,5):[(2,4), (2,6)],
+            (2,6):[(2,5), (2,7)],
+            
+            #COMPONENTE 2
+            (2,7):[(3,7),(2,6)],
+            (3,7):[(2,7),(4,7)],
+            (4,7):[(5,7),(3,7)],
+            (5,7):[(5,8),(4,7)],
+            (5,8):[(5,9),(5,7)],
+            (5,9):[(5,10),(5,8)],
+            (5,10):[(5,11),(5,9)],
+            #ESQUINA MUERTA
+            (2,9):[(2,10)],
+            (2,10):[(2,9),(2,11)],
+            (2,11):[(2,10),(3,11)],
+            (3,11):[(2,11)],
+            
+            
+            #COMPONENTE 3
+            (4,17):[(5,17)],
+            (5,17):[(6,17),(4,17)],
+            (6,17):[(7,17),(5,17)],
+            (7,17):[(8,17),(6,17)],
+            (8,17):[(9,17),(7,17)],
+            (9,17):[(10,17),(8,17)],
+            (10,17):[(11,17),(9,17)],
+            (11,17):[(11,16),(10,17)],
+            (11,16):[(11,17)],
+            
+            
+            
+            
+            #LADO DERECHO
+            # Componente 1
+            (16, 2): [(16, 3)],
+            (16, 3): [(16, 4), (16, 2)],
+            (16, 4): [(16, 5), (16, 3)],
 
+            # Componente 2
+
+            (21, 2): [(21, 3)],
+            (21, 3): [(21, 4), (21, 2)],
+            (21, 4): [(21, 5), (21, 3)],
+            (21, 5): [(21, 6), (21, 4)],
+            (21, 6): [(21, 7), (21, 5)], # SEMAFORO
+            (21, 7): [(21, 8), (21, 6)], # SEMAFORO
+            (21, 8): [(21, 9), (21, 7)],
+            (21, 9): [(21, 10), (21, 8)],
+            (21, 10): [(21, 11), (21, 9)],
+            (21, 11):[(21,10)]
+            
+        }
 
         # Adding buildings
         building_positions = [(2,2), (2,3) 
@@ -150,21 +221,27 @@ class TrafficModel(Model):
             self.schedule.add(traffic_light)
 
         # Adding parking lots
-        self.parking_lot_positions = [(4,4),(8,9),(2,8),(4,11),(9,2),(11,6),(10,11),(17,2),(18,11),(20,8),(20,5),(3,17),(10,16),(4,20),(9,21),(17,17),(21,20)]
+        
+        self.parking_lot_positions = [(4,4), (8,9), (2,8), (4,11), (9,2), (11,6), (10,11), (17,2), (18,11), (20,8), (20,5), (3,17), (10,16), (4,20), (9,21), (17,17), (21,20)]
         for i, pos in enumerate(self.parking_lot_positions):
             parking_lot = ParkingLotAgent(f"parking_{i}", self)
             self.grid.place_agent(parking_lot, pos)
             self.schedule.add(parking_lot)
 
-        
+        occupied_parking_lots = set()  # Track which parking lots are occupied
 
-
-        for i in range(25):  # Spawn 25 cars
-            available_parking_lots = [pos for pos in self.parking_lot_positions]
-            if not available_parking_lots:
+        # Spawn 5 cars
+        for i in range(5):
+            available_parking_lots = [pos for pos in self.parking_lot_positions if pos not in occupied_parking_lots]
+            
+            if len(available_parking_lots) < 2:
+                # No hay suficientes posiciones disponibles para generar autos (inicio y destino distintos)
                 break
+
             start = random.choice(available_parking_lots)
-            destination = random.choice([pos for pos in self.parking_lot_positions if pos != start])
+            occupied_parking_lots.add(start)
+            
+            destination = random.choice([pos for pos in available_parking_lots if pos != start])
 
             # Create the car agent and place it on the grid
             car = CarAgent(f"car_{i}", self, start, destination)
@@ -173,7 +250,18 @@ class TrafficModel(Model):
 
             # Initialize movement tracking for this car
             self.car_movements[car.unique_id] = [start]
-            
+
+            # Verificación de asignación correcta de autos
+            print(f"Car {i} created at {start} with destination {destination}")
+        # Adding pedestrians
+        pedestrian_graph_positions = list(self.banquetota.keys())  # Usar las posiciones del grafo (banquetota) del modelo
+
+        for i in range(9):  # Spawn 3 pedestrians at random nodes of the pedestrian graph
+            start = random.choice(pedestrian_graph_positions)
+            pedestrian = PedestrianAgent(f"pedestrian_{i}", self, start_pos=start)
+            self.grid.place_agent(pedestrian, start)
+            self.schedule.add(pedestrian)
+
             print("\n\n\n\n\n\n\nDESDE AQUI VA EL START", start)
             print("\n\n\n\n\n\n\nDESDE AQUI VA EL DESTINATION", destination)
 
@@ -228,6 +316,7 @@ class TrafficModel(Model):
             ridge = HorizontalRidgeAgent(f"ridge_{pos}", self, pos)
             self.grid.place_agent(ridge, pos)
             self.schedule.add(ridge)
+            
 
     def random_unoccupied_position(self):
         while True:

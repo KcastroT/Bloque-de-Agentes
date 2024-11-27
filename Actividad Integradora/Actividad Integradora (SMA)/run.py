@@ -1,4 +1,3 @@
-from traffic_model import TrafficModel
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from matplotlib.patches import Rectangle
@@ -8,6 +7,8 @@ from trafficLight_agent import TrafficLightAgent
 from parkingLot_Agent import ParkingLotAgent
 from verticalRidge_agent import VerticalRidgeAgent
 from horizontalRidge_agent import HorizontalRidgeAgent
+from peaton_agent import PedestrianAgent
+from traffic_model import TrafficModel
 
 def render(ax):
     """Render the model on the given Matplotlib Axes."""
@@ -31,6 +32,8 @@ def render(ax):
             ax.add_patch(Rectangle((x, y), 1, 1, color=color))
         elif isinstance(agent, ParkingLotAgent):
             ax.add_patch(Rectangle((x, y), 1, 1, color="yellow"))
+        elif isinstance(agent, PedestrianAgent):
+            ax.add_patch(Rectangle((x, y), 1, 1, color="orange"))
         elif isinstance(agent, CarAgent):
             ax.add_patch(Rectangle((x, y), 1, 1, color="black"))
         elif isinstance(agent, VerticalRidgeAgent):
@@ -43,12 +46,10 @@ def render(ax):
     ax.grid(True)
     ax.invert_yaxis()
 
-
 def update(frame):
     """Update function for FuncAnimation."""
     model.step()  
     render(ax)    
-
 
 def render_model():
     """Set up and run the animation."""
@@ -58,13 +59,10 @@ def render_model():
     render(ax)
     plt.draw() 
 
-
     anim = FuncAnimation(
         fig, update, frames=100, interval=200, repeat=False, blit=False
     )  
     plt.show()
-
-
 
 model = TrafficModel(width=24, height=24)
 render_model()

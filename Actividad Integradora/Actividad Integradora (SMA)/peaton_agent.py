@@ -1,53 +1,100 @@
 from mesa import Agent
-import random
 from collections import deque
+from trafficLight_agent import TrafficLightAgent
+from car_agent import CarAgent
 
 class PedestrianAgent(Agent):
-    """Agente que representa a un peatón que se mueve a lo largo de caminos predefinidos."""
-    def __init__(self, unique_id, model):
+    def __init__(self, unique_id, model, start_pos):
         super().__init__(unique_id, model)
-        self.destination = None
-        self.path = []
+        self.start_pos = start_pos
+        self.current_pos = start_pos
+
+        # Inicializar atributos antes de usarlos
+        self.traffic_lights = [(2, 5), (2, 6)]  # Puedes mover esta lista al modelo si prefieres tenerla centralizada.
+        
+        # Inicializar la ruta al semáforo más cercano
+        self.path = self.find_nearest_traffic_light_dfs(start_pos)  
+        
+        self.reached_traffic_light = False
+        self.crossing_traffic_light = False
+        self.cross_path = []
+
+    def find_nearest_traffic_light_dfs(self, start):
+        # Implementación de DFS para encontrar el semáforo más cercano
+        graph = self.model.banquetota  # Acceder al grafo desde el modelo
+        if start not in graph:
+            return []
+
+        stack = [[start]]
+        visited = set()
+
+        while stack:
+            path = stack.pop()
+            current_node = path[-1]
+
+            if current_node in self.traffic_lights:
+                return path[1:]  # Excluir la posición actual
+
+            if current_node not in visited:
+                visited.add(current_node)
+                for neighbor in graph.get(current_node, []):
+                    if neighbor not in visited:
+                        new_path = list(path)
+                        new_path.append(neighbor)
+                        stack.append(new_path)
+
+        return []
+
+    def move(self):
+        if len(self.path) > 0 and not self.crossing_traffic_light:
+            # Moverse hacia el semáforo
+            next_pos = self.path.pop(0)
+            self.model.grid.move_agent(self, next_pos)
+            self.current_pos = next_pos
+        elif self.crossing_traffic_light and len(self.cross_path) > 0:
+            # Cruzar completamente el semáforo
+            next_pos = self.cross_path.pop(0)
+            if self.can_move_to(next_pos):
+                self.model.grid.move_agent(self, next_pos)
+                self.current_pos = next_pos
+            if len(self.cross_path) == 0:
+                # Termina de cruzar
+                self.crossing_traffic_light = False
+        else:
+            # Esperar a que el semáforo esté en rojo y preparar la secuencia para cruzar
+            cellmates = self.model.grid.get_cell_list_contents([self.current_pos])
+            for agent in cellmates:
+                if isinstance(agent, TrafficLightAgent) and agent.color == "red":
+                    # Encontrar la secuencia completa para cruzar el semáforo
+                    self.cross_path = self.get_crossing_path(self.current_pos)
+                    self.crossing_traffic_light = True
 
     def step(self):
-        if not self.path:
-            self.set_new_destination()
-
-        if self.path:
-            next_pos = self.path.pop(0)
-            # Verificar si la posición está libre
-            cellmates = self.model.grid.get_cell_list_contents([next_pos])
-            if any(isinstance(agent, PedestrianAgent) for agent in cellmates):
-                # No puede moverse; esperar o recalcular
-                self.path = []
-            else:
-                self.model.grid.move_agent(self, next_pos)
+        if not self.reached_traffic_light and len(self.path) > 0:
+            # Moverse hacia el semáforo
+            self.move()
+            if self.current_pos in self.traffic_lights:
+                # Cuando llegue a la posición del semáforo
+                self.reached_traffic_light = True
         else:
-            # No hay camino disponible; esperar o buscar nuevo destino
-            pass
+            # Cruzar el semáforo si ya llegó
+            self.move()
 
-    def set_new_destination(self):
-        # Escoger un destino aleatorio diferente a la posición actual
-        possible_destinations = list(self.model.pedestrian_walkable_positions - {self.pos})
-        if possible_destinations:
-            self.destination = random.choice(possible_destinations)
-            self.path = self.bfs_shortest_path(self.pos, self.destination)
-        else:
-            self.destination = self.pos
-            self.path = []
+    def get_crossing_path(self, current_pos):
+        # Define la secuencia de posiciones que cruzan completamente el semáforo
+        graph = self.model.banquetota
+        if current_pos not in graph:
+            return []
 
-    def bfs_shortest_path(self, start, goal):
-        adjacency = self.model.pedestrian_adjacency
-        queue = deque()
-        queue.append((start, [start]))
-        visited = set()
-        visited.add(start)
-        while queue:
-            current_position, path = queue.popleft()
-            if current_position == goal:
-                return path[1:]  # Excluir la posición actual
-            for neighbor in adjacency.get(current_position, []):
-                if neighbor not in visited:
-                    visited.add(neighbor)
-                    queue.append((neighbor, path + [neighbor]))
-        return []  # No se encontró camino
+        crossing_path = []
+        neighbors = graph.get(current_pos, [])
+        for neighbor in neighbors:
+            if neighbor not in self.traffic_lights:
+                crossing_path.append(neighbor)
+
+        return crossing_path
+
+    def can_move_to(self, pos):
+        # Verificar que la posición está libre de otros peatones o coches
+        cellmates = self.model.grid.get_cell_list_contents([pos])
+        return not any(isinstance(other_agent, (CarAgent)) for other_agent in cellmates)
