@@ -1,5 +1,4 @@
 from mesa import Agent
-from collections import deque
 from trafficLight_agent import TrafficLightAgent
 from car_agent import CarAgent
 
@@ -35,7 +34,7 @@ class PedestrianAgent(Agent):
         if self.crossing and self.cross_path:
             next_pos = self.cross_path.pop(0)
 
-            # Verificar si el próximo movimiento es hacia un semáforo y está adyacente
+            # Verificar si el próximo movimiento es hacia un semáforo
             cellmates_next = self.model.grid.get_cell_list_contents([next_pos])
             traffic_light_next = next((agent for agent in cellmates_next if isinstance(agent, TrafficLightAgent)), None)
 
@@ -44,7 +43,8 @@ class PedestrianAgent(Agent):
                 direction = (next_pos[0] - self.current_pos[0], next_pos[1] - self.current_pos[1])
                 double_step_pos = (next_pos[0] + direction[0], next_pos[1] + direction[1])
 
-                if self.can_move_to(double_step_pos):
+                # Verificar si el semáforo permite cruzar y la posición de dos pasos es válida
+                if traffic_light_next.can_pedestrian_cross() and self.can_move_to(double_step_pos):
                     # Realizar el salto de dos pasos
                     self.model.grid.move_agent(self, double_step_pos)
                     self.current_pos = double_step_pos
@@ -80,7 +80,6 @@ class PedestrianAgent(Agent):
                     self.model.grid.move_agent(self, next_move)
                     self.current_pos = next_move
 
-
     def move_off_traffic_light(self):
         # Encontrar una posición vecina que esté en component_positions y no sea un semáforo
         neighbors = self.get_neighbors(self.current_pos)
@@ -112,9 +111,22 @@ class PedestrianAgent(Agent):
         self.move()
 
     def can_move_to(self, pos):
-        # Verificar que la posición está libre de otros peatones o coches
+        """
+        Verificar si el peatón puede moverse a una posición:
+        - No debe haber coches.
+        - No debe ser un semáforo en verde para coches.
+        """
         cellmates = self.model.grid.get_cell_list_contents([pos])
-        return not any(isinstance(other_agent, CarAgent) for other_agent in cellmates)
+        # Verificar que no haya coches en la celda
+        if any(isinstance(other_agent, CarAgent) for other_agent in cellmates):
+            return False
+
+        # Verificar que no sea un semáforo en verde para coches
+        traffic_light = next((agent for agent in cellmates if isinstance(agent, TrafficLightAgent)), None)
+        if traffic_light and not traffic_light.can_pedestrian_cross():
+            return False
+
+        return True
 
     def get_neighbors(self, position):
         # Devuelve los vecinos válidos desde el grafo de banquetas
