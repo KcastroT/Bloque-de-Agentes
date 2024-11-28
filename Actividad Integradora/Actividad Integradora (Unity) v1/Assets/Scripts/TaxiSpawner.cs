@@ -106,5 +106,7 @@ public class TaxiSpawner : MonoBehaviour
 
             yield return null;
         }
+
+        Destroy(car);
     }
 }
