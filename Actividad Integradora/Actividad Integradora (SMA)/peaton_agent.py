@@ -12,19 +12,19 @@ class PedestrianAgent(Agent):
         self.waiting = False
 
     def move(self):
-        # Verificar si el peatón está sobre un semáforo
+        # Obtener los agentes en la celda actual
         cellmates = self.model.grid.get_cell_list_contents([self.current_pos])
         traffic_light = next((agent for agent in cellmates if isinstance(agent, TrafficLightAgent)), None)
+
         if traffic_light:
             if traffic_light.can_pedestrian_cross():
-                # Si el semáforo permite cruzar, continuar cruzando
                 self.crossing = True
                 self.waiting = False
                 if not self.cross_path:
                     # Generar la ruta de cruce desde la posición actual
                     self.cross_path = self.get_crossing_path(self.current_pos, self.current_pos)
             else:
-                # Si el semáforo está en verde para coches, moverse fuera de la posición
+                # Mover fuera del semáforo si no puede cruzar
                 self.crossing = False
                 self.waiting = True
                 self.move_off_traffic_light()
@@ -33,14 +33,30 @@ class PedestrianAgent(Agent):
             self.waiting = False
 
         if self.crossing and self.cross_path:
-            # Continuar cruzando
             next_pos = self.cross_path.pop(0)
+
+            # Verificar si el próximo movimiento es hacia un semáforo y está adyacente
+            cellmates_next = self.model.grid.get_cell_list_contents([next_pos])
+            traffic_light_next = next((agent for agent in cellmates_next if isinstance(agent, TrafficLightAgent)), None)
+
+            if traffic_light_next:
+                # Obtener la posición dos pasos adelante en la misma dirección
+                direction = (next_pos[0] - self.current_pos[0], next_pos[1] - self.current_pos[1])
+                double_step_pos = (next_pos[0] + direction[0], next_pos[1] + direction[1])
+
+                if self.can_move_to(double_step_pos):
+                    # Realizar el salto de dos pasos
+                    self.model.grid.move_agent(self, double_step_pos)
+                    self.current_pos = double_step_pos
+                    return  # Terminar el movimiento aquí
+
+            # Movimiento normal de un paso si no puede hacer el salto
             if self.can_move_to(next_pos):
                 self.model.grid.move_agent(self, next_pos)
                 self.current_pos = next_pos
             else:
-                # No puede moverse, espera
                 self.crossing = False
+
             if not self.cross_path:
                 # Termina de cruzar
                 self.crossing = False
@@ -56,17 +72,14 @@ class PedestrianAgent(Agent):
                         self.cross_path = self.get_crossing_path(self.current_pos, neighbor)
                         self.crossing = True
                         return
-                    else:
-                        # Esperar en el cruce
-                        self.waiting = True
-                        return
             if not self.crossing:
-                # Moverse aleatoriamente si no está esperando
+                # Movimiento aleatorio si no está esperando
                 valid_moves = [pos for pos in neighbors if self.can_move_to(pos)]
                 if valid_moves:
                     next_move = self.random.choice(valid_moves)
                     self.model.grid.move_agent(self, next_move)
                     self.current_pos = next_move
+
 
     def move_off_traffic_light(self):
         # Encontrar una posición vecina que esté en component_positions y no sea un semáforo
