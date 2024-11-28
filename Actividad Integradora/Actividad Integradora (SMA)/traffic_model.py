@@ -13,7 +13,7 @@ import random
 from peaton_agent import PedestrianAgent
 
 class TrafficModel(Model):
-    def __init__(self, width, height,steps = 100):
+    def __init__(self, width, height,steps = 1500):
         super().__init__()
         self.grid = MultiGrid(width, height, torus=False)
         self.schedule = SimultaneousActivation(self)
