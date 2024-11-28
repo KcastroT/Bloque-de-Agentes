@@ -5,7 +5,7 @@ import re
 app = Flask(__name__)
 
 # Create and run the model globally
-model = TrafficModel(width=24, height=24, steps=100)
+model = TrafficModel(width=24, height=24, steps=1500)
 model.run_model()
 
 # Precompute the data
