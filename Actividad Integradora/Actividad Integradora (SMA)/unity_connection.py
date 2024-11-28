@@ -10,7 +10,12 @@ model.run_model()
 
 # Precompute the data
 car_movements = model.get_car_positions()
-traffic_light_states = model.get_traffic_light_colors()  # Assuming you have a method for traffic lights
+traffic_light_states = model.get_traffic_light_colors()
+pedestrian_positions = model.get_pedestrian_positions()
+taxi_positions = model.get_taxi_positions()
+passenger_positions = model.get_passenger_positions()
+
+
 
 
 @app.route('/cars', methods=['GET'])
@@ -42,6 +47,42 @@ def get_traffic_light_states():
                 "positions": [{"step": step, "color": color} for step, color in enumerate(color_history)],
                 "trafficLightId": [x, y]
             })
+
+    return jsonify(formatted_states)
+
+@app.route('/pedestrians', methods=['GET'])
+def get_pedestrian_positions():
+    formatted_states = []
+    for pedestrian_id, positions in pedestrian_positions.items():
+        formatted_positions = [{"x": pos[0], "y": pos[1]} for pos in positions]
+        formatted_states.append({
+            "pedestrianId": pedestrian_id,
+            "positions": formatted_positions
+        })
+
+    return jsonify(formatted_states)
+
+@app.route('/taxis', methods=['GET'])
+def get_taxi_positions():
+    formatted_states = []
+    for taxi_id, positions in taxi_positions.items():
+        formatted_positions = [{"x": pos[0], "y": pos[1]} for pos in positions]
+        formatted_states.append({
+            "taxiId": taxi_id,
+            "positions": formatted_positions
+        })
+
+    return jsonify(formatted_states)
+
+@app.route('/passengers', methods=['GET'])
+def get_passenger_positions():
+    formatted_states = []
+    for passenger_id, positions in passenger_positions.items():
+        formatted_positions = [{"x": pos[0], "y": pos[1]} for pos in positions]
+        formatted_states.append({
+            "passengerId": passenger_id,
+            "positions": formatted_positions
+        })
 
     return jsonify(formatted_states)
 

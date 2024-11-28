@@ -21,6 +21,9 @@ class TrafficModel(Model):
         self.current_step = 0
         self.car_movements = {}
         self.traffic_lights = {}
+        self.pedestrian_moves = {}
+        self.taxi_moves = {}
+        self.passenger_moves = {}
 
          # Definir posiciones caminables para peatones (sin incluir semáforos)
         self.pedestrian_walkable_positions = set()
@@ -335,7 +338,7 @@ class TrafficModel(Model):
 
         occupied_parking_lots = set()  # Track which parking lots are occupied
 
-        # Spawn 5 cars
+        # Spawn 25 cars
         for i in range(25):
             available_parking_lots = [pos for pos in self.parking_lot_positions if pos not in occupied_parking_lots]
             
@@ -364,6 +367,7 @@ class TrafficModel(Model):
             taxi = TaxiAgent(f"taxi_{i}", self)
             self.grid.place_agent(taxi, taxi.start)  # Place the taxi at its start position
             self.schedule.add(taxi)
+            self.taxi_moves[taxi.unique_id] = []
             print(f"Taxi {i} created at {taxi.start} with destination {taxi.destination}")
 
 
@@ -380,6 +384,7 @@ class TrafficModel(Model):
             self.grid.place_agent(passenger, pos)
             self.schedule.add(passenger)
             print(f"Passenger {i} created at {pos}")
+            self.passenger_moves[passenger.unique_id] = []
 
         # Adding pedestrians
         pedestrian_graph_positions = list(self.banquetota.keys())  # Usar las posiciones del grafo (banquetota) del modelo
@@ -395,6 +400,7 @@ class TrafficModel(Model):
             pedestrian = PedestrianAgent(f"pedestrian_{i}", self, start_pos=start)
             self.grid.place_agent(pedestrian, start)
             self.schedule.add(pedestrian)
+            self.pedestrian_moves[pedestrian.unique_id] = []
 
             print(f"Pedestrian {i} created at {start}")
             print("\n\n\n\n\n\n\nDESDE AQUI VA EL START", start)
@@ -466,6 +472,15 @@ class TrafficModel(Model):
     
     def get_traffic_light_colors(self):
         return self.traffic_lights
+    
+    def get_pedestrian_positions(self):
+        return self.pedestrian_moves
+    
+    def get_taxi_positions(self):
+        return self.taxi_moves
+    
+    def get_passenger_positions(self):
+        return self.passenger_moves
 
     def step(self):
         """
@@ -480,6 +495,18 @@ class TrafficModel(Model):
         for agent in self.schedule.agents:
             if isinstance(agent, CarAgent):
                 self.car_movements[agent.unique_id].append(agent.pos)
+
+        for agent in self.schedule.agents:
+            if isinstance(agent,PedestrianAgent):
+                self.pedestrian_moves[agent.unique_id].append(agent.pos)
+
+        for agent in self.schedule.agents:
+            if isinstance(agent,TaxiAgent):
+                self.taxi_moves[agent.unique_id].append(agent.pos)
+            
+        for agent in self.schedule.agents:
+            if isinstance(agent,PassengerAgent):
+                self.passenger_moves[agent.unique_id].append(agent.pos)
 
         # Advance the simulation
         self.schedule.step()
