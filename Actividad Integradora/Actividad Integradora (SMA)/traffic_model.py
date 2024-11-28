@@ -357,7 +357,7 @@ class TrafficModel(Model):
             self.schedule.add(car)
 
             # Initialize movement tracking for this car
-            self.car_movements[car.unique_id] = [start]
+            self.car_movements[car.unique_id] = []
 
             # Verificación de asignación correcta de autos
             print(f"Car {i} created at {start} with destination {destination}")
@@ -384,7 +384,7 @@ class TrafficModel(Model):
             self.grid.place_agent(passenger, pos)
             self.schedule.add(passenger)
             print(f"Passenger {i} created at {pos}")
-            self.passenger_moves[passenger.unique_id] = [passenger.pos]
+            self.passenger_moves[passenger.unique_id] = []
 
         # Adding pedestrians
         pedestrian_graph_positions = list(self.banquetota.keys())  # Usar las posiciones del grafo (banquetota) del modelo
@@ -400,7 +400,7 @@ class TrafficModel(Model):
             pedestrian = PedestrianAgent(f"pedestrian_{i}", self, start_pos=start)
             self.grid.place_agent(pedestrian, start)
             self.schedule.add(pedestrian)
-            self.pedestrian_moves[pedestrian.unique_id] = [pedestrian.pos]
+            self.pedestrian_moves[pedestrian.unique_id] = []
 
             print(f"Pedestrian {i} created at {start}")
             print("\n\n\n\n\n\n\nDESDE AQUI VA EL START", start)
