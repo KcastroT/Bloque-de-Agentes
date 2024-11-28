@@ -120,7 +120,7 @@ public class TrafficLightSpawner : MonoBehaviour
 
             // Simulate the duration for the traffic light state (adjust for smoother transitions)
             float elapsedTime = 0f;
-            float duration = 0.25f; // Duration of each light cycle (in seconds)
+            float duration = 0.2f; // Duration of each light cycle (in seconds)
 
             while (elapsedTime < duration)
             {
