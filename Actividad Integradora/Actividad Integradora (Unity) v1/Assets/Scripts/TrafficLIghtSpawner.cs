@@ -86,7 +86,7 @@ public class TrafficLightSpawner : MonoBehaviour
         Light lightComponent = trafficLight.GetComponent<Light>();
 
         // Debug the initial state of the light
-        Debug.Log($"Initial light color: {positions[0].color}");
+
 
         // Set the initial color based on the first position's color
         string initialColor = positions[0].color;  // Assuming you want to parse 'green' or 'red' from color property
@@ -103,7 +103,7 @@ public class TrafficLightSpawner : MonoBehaviour
         for (int i = 1; i < positions.Count; i++)
         {
             string colorState = positions[i].color; // Get the color state from the JSON data
-            Debug.Log($"Changing light to: {colorState} at step {i}");
+
 
             // Change the light color based on the current state
             if (colorState == "green")
@@ -116,7 +116,7 @@ public class TrafficLightSpawner : MonoBehaviour
             }
 
             // Debug the color change
-            Debug.Log($"Traffic light at {trafficLight.transform.position} changed to {colorState}");
+
 
             // Simulate the duration for the traffic light state (adjust for smoother transitions)
             float elapsedTime = 0f;

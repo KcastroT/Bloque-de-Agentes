@@ -367,7 +367,7 @@ class TrafficModel(Model):
             taxi = TaxiAgent(f"taxi_{i}", self)
             self.grid.place_agent(taxi, taxi.start)  # Place the taxi at its start position
             self.schedule.add(taxi)
-            self.taxi_moves[taxi.unique_id] = []
+            self.taxi_moves[taxi.unique_id] = [taxi.pos]
             print(f"Taxi {i} created at {taxi.start} with destination {taxi.destination}")
 
 
@@ -384,7 +384,7 @@ class TrafficModel(Model):
             self.grid.place_agent(passenger, pos)
             self.schedule.add(passenger)
             print(f"Passenger {i} created at {pos}")
-            self.passenger_moves[passenger.unique_id] = []
+            self.passenger_moves[passenger.unique_id] = [passenger.pos]
 
         # Adding pedestrians
         pedestrian_graph_positions = list(self.banquetota.keys())  # Usar las posiciones del grafo (banquetota) del modelo
@@ -400,7 +400,7 @@ class TrafficModel(Model):
             pedestrian = PedestrianAgent(f"pedestrian_{i}", self, start_pos=start)
             self.grid.place_agent(pedestrian, start)
             self.schedule.add(pedestrian)
-            self.pedestrian_moves[pedestrian.unique_id] = []
+            self.pedestrian_moves[pedestrian.unique_id] = [pedestrian.pos]
 
             print(f"Pedestrian {i} created at {start}")
             print("\n\n\n\n\n\n\nDESDE AQUI VA EL START", start)
